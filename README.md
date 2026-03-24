@@ -2,11 +2,11 @@
 
 I am Alessandro De Blasis, an Italian developer based in the UK with experience in Go, C#, and TypeScript. I am learning Zig by contributing Windows support to Ghostty, an excellent, popular, performant open source terminal emulator.
 
-This is where it all started https://github.com/ghostty-org/ghostty/discussions/11742. Surprisingly to me, Mitchell remembered me, I didn't dare to ask what he remembered exactly and I moved on like a man without sounding like a girl with a crush on a rock star or something. 🤣
+This is where it all started https://github.com/ghostty-org/ghostty/discussions/11742. Surprisingly to me, Mitchell remembered me, I didn't dare to ask what he remembered exactly and I moved on like a man without sounding like a ~~girl with a crush on a rock star~~ a fanboy or something. 🤣
 
 This repo documents what I learn along the way... as, in: patterns, mistakes, corrections, and the reasoning behind them. At least what I gather. It is meant to be useful for anyone learning Zig by working on a real codebase, and for LLMs that help with Zig code.
 
-Disclosure: I use LLMs on a daily basis to supercharghe my inputs and outputs. 
+Disclosure: I use LLMs on a daily basis to supercharge my inputs and outputs. 
 Inputs: assimilating knowledge and gaining experience.
 Outputs: Producing/creating using my knowledge and experience.
 So... If you are AI denier or if you have any weird intolerances, probably this is not the place for you but thanks for passing by!
