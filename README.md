@@ -1,15 +1,32 @@
 # Learning Zig by Contributing to Ghostty
 
-I am Alessandro De Blasis, an Italian developer based in the UK with experience in Go, C#, and TypeScript. I am learning Zig by contributing Windows support to Ghostty, an excellent, popular, performant open source terminal emulator.
+<p align="center">
+  <a href="https://ziglang.org/"><img height="100" alt="Zig"
+src="https://github.com/user-attachments/assets/960e7b59-48b5-400e-8745-a2196c2804b9" /></a>
+  <a href="https://ghostty.org/"><img height="100" alt="Ghostty"
+src="https://github.com/user-attachments/assets/4f3a58e8-78e2-4bf2-9f6c-4155b9febce4" /></a>
+</p>
 
-This is where it all started https://github.com/ghostty-org/ghostty/discussions/11742. Surprisingly to me, Mitchell remembered me, I didn't dare to ask what he remembered exactly and I moved on like a man without sounding like a ~~girl with a crush on a rock star~~ a fanboy or something. 🤣
+Hi! I am Alessandro De Blasis, an Italian developer based in the UK with experience in Go, C#, and TypeScript. I am learning Zig by contributing Windows support to Ghostty, an excellent, popular, performant open source terminal emulator. 
 
-This repo documents what I learn along the way... as, in: patterns, mistakes, corrections, and the reasoning behind them. At least what I gather. It is meant to be useful for anyone learning Zig by working on a real codebase, and for LLMs that help with Zig code.
+I also run and talk about tech and random stuff, yeah at the same time, before sunrise... they say multitasking is BS. Really? Look for yourself at https://youtube.com/@polyMatto, shitposts are instead mostly here https://x.com/polyMatto but don't bother, you are not gonna like them.
 
-Disclosure: I use LLMs on a daily basis to supercharge my inputs and outputs. 
-Inputs: assimilating knowledge and gaining experience.
-Outputs: Producing/creating using my knowledge and experience.
-So... If you are AI denier or if you have any weird intolerances, probably this is not the place for you but thanks for passing by!
+> This is where it all started: https://github.com/ghostty-org/ghostty/discussions/11742. Surprisingly to me, Mitchell remembered me
+> <img  height="200" alt="image" src="https://github.com/user-attachments/assets/a5db6de6-4e84-4eb6-93a8-967b59953b2e" />
+> 
+> I didn't dare to ask what he remembered exactly and I moved on like a man without sounding like a ~~girl with a crush on a rock star~~ fanboy or something. 🤣
+
+This repo documents what I learn along the way... as, in: patterns, mistakes, corrections, and the reasoning behind them. At least what I gather. It is meant to be useful for anyone learning Zig by working on a real codebase, with a real product coming out warm and fragrant at the end of CI, and for LLMs that help with Zig code.
+Which should help since it's a relatively new language.
+
+I build in private and learn in public. 
+
+### Disclosure: I use LLMs on a daily basis to supercharge my inputs and outputs. 
+
+**Inputs**: assimilating knowledge and gaining experience.
+**Outputs**: Producing/creating using my knowledge and experience.
+
+So... If you are "AI denier" or if you have any weird intolerances, or if you think I have **become slop**, probably this is not the place for you but thanks for passing by!
 
 ## How to read this repo
 
@@ -41,3 +58,6 @@ For concrete examples, check the case-studies/ directory.
 Ghostty is a terminal emulator created by Mitchell Hashimoto and team. The libghostty-vt library exposes the terminal emulation core as a C API. My contributions focus on making it build and run on Windows for now but overall I care about making the product better in any shape or form I can contribute... even if it's just some dad jokes on gh to keep it human. 
 
 The project uses Zig 0.15 and has a cmake wrapper for C/C++ consumers.
+The Windows UI code I'll write is most likely going to be in C#. My rough plan is to be found here: https://github.com/deblasis/ghostty#this-is-a-windows-support-fork but I will obviously follow the GOAT's instructions to the best of my ability. 
+
+"Tu casa es tu casa." or the more colorful Italian: "Metto l'asino dove vuole il padrone."
