@@ -33,3 +33,11 @@ PR 6 on deblasis/ghostty. Related: [testing](patterns/testing.md)
 **ghostty_free** -- Merged
 Added ghostty_free() for cross-runtime memory safety on Windows. Mitchell improved it before merging: added ghostty_alloc(), dedicated allocator.zig file, 6 tests.
 PR 11785 on ghostty-org/ghostty. Related: [api design](patterns/api-design.md), [cmake](patterns/cmake.md)
+
+**cmake import-lib OUTPUT fix** -- Merged
+One-line fix adding the .lib import library to the custom command OUTPUT directive. Without it Ninja fails on Windows. Tested in fork first, then proposed upstream.
+PR 11794 on ghostty-org/ghostty. Related: [cmake](patterns/cmake.md), [code-style](patterns/code-style.md)
+
+**ghostling Windows port** -- Open
+ConPTY-based terminal emulation, threaded pipe reader, shell auto-detection. Single commit on top of upstream main.
+PR 6 on ghostty-org/ghostling. Related: [code-style](patterns/code-style.md), [cmake](patterns/cmake.md)

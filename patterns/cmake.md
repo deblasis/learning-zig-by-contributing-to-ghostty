@@ -21,3 +21,4 @@ When Zig builds a DLL with link_libc = true on Windows, it uses its own libc imp
 ## Where I learned this
 
 - [03-ghostty-free](../case-studies/03-ghostty-free.md) -- heap mismatch, ghostty_free
+- [05-windows-port-ghostling](../case-studies/05-windows-port-ghostling.md) -- Ninja OUTPUT fix proposed and merged upstream
