@@ -51,6 +51,7 @@ Patterns index:
 - api-design.md -- alloc/free pairs, module naming, header docs, switch arm patterns
 - cmake.md -- Windows DLL/implib, Ninja, FetchContent, build pipeline stages
 - code-style.md -- abstraction level, demo code simplicity, fork-first testing
+- comptime.md -- branch quota limits, MSVC translate-c size, debugging comptime with POC tests
 
 For concrete examples, check the case-studies/ directory.
 

@@ -41,3 +41,15 @@ PR 11794 on ghostty-org/ghostty. Related: [cmake](patterns/cmake.md), [code-styl
 **ghostling Windows port** -- Open
 ConPTY-based terminal emulation, threaded pipe reader, shell auto-detection. Single commit on top of upstream main.
 PR 6 on ghostty-org/ghostling. Related: [code-style](patterns/code-style.md), [cmake](patterns/cmake.md)
+
+**ssize_t typedef for MSVC** -- Draft
+MSVC's sys/types.h does not define ssize_t. Added conditional typedef using SSIZE_T from BaseTsd.h. Fixes translate-c step.
+PR 13 on deblasis/ghostty. Related: [platform abstraction](patterns/platform-abstraction.md)
+
+**linkLibCpp + freetype enum signedness** -- Draft
+Skip linkLibCpp on MSVC for dcimgui, spirv-cross, harfbuzz (same pattern as upstream glslang fix). Fix freetype C enum signedness with @intCast and @bitCast.
+PR 14 on deblasis/ghostty. Related: [platform abstraction](patterns/platform-abstraction.md)
+
+**comptime branch quota for ghostty.h enum checks** -- Draft
+MSVC translate-c output has ~2173 declarations vs ~1502 on Linux/Mac. The 1M comptime branch quota was not enough for MouseShape (34 variants). Increased to 10M. Diagnosed with 7 isolated POC tests.
+PR 15 on deblasis/ghostty. Related: [comptime](patterns/comptime.md)
