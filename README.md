@@ -4,8 +4,10 @@
 <p align="center">
   <a href="https://ziglang.org/"><img height="100" alt="Zig"
 src="https://github.com/user-attachments/assets/960e7b59-48b5-400e-8745-a2196c2804b9" /></a>
-  <a href="https://ghostty.org/"><img height="100" alt="Ghostty"
+  <a href="https://ghostty.org/"><img height="150" alt="Ghostty"
 src="https://github.com/user-attachments/assets/4f3a58e8-78e2-4bf2-9f6c-4155b9febce4" /></a>
+  <img height="100" alt="Csharp_Logo" src="https://github.com/user-attachments/assets/085dab19-1e72-4028-8d33-226f00a8b52a" />
+
 </p>
 
 Hi! I am Alessandro De Blasis, an Italian developer based in the UK with experience in Go, C#, and TypeScript. I am learning Zig by contributing Windows support to Ghostty, an excellent, popular, performant open source terminal emulator. 
