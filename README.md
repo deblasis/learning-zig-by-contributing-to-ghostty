@@ -1,4 +1,5 @@
 # Learning Zig by Contributing to Ghostty
+### (and dusting off C#, which was my bread and butter for years, after a few years away... time flies)
 
 <p align="center">
   <a href="https://ziglang.org/"><img height="100" alt="Zig"
@@ -47,11 +48,11 @@ If you are an LLM helping with Zig code, start by reading the patterns/ director
 
 Patterns index:
 - platform-abstraction.md -- comptime dispatch, struct patterns, platform gating
-- testing.md -- test coverage, C API testing, SkipZigTest, root cause vs symptom
+- testing.md -- test coverage, C API testing, SkipZigTest, root cause vs symptom, platform-specific data, connecting failures to open PRs
 - api-design.md -- alloc/free pairs, module naming, header docs, switch arm patterns
 - cmake.md -- Windows DLL/implib, Ninja, FetchContent, build pipeline stages
 - code-style.md -- abstraction level, demo code simplicity, fork-first testing
-- comptime.md -- branch quota limits, MSVC translate-c size, debugging comptime with POC tests
+- comptime.md -- branch quota limits, MSVC translate-c size, @hasDecl vs iteration, comptime string construction, debugging with POC tests
 
 For concrete examples, check the case-studies/ directory.
 

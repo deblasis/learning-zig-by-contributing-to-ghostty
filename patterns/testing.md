@@ -1,4 +1,4 @@
-Last verified: 2026-03-24
+Last verified: 2026-03-25
 
 # Testing
 
@@ -21,8 +21,15 @@ When you find a bug pattern that appears in multiple files, search the whole dir
 **Fix the root cause, not the symptom.**
 We gated failing imports behind artifact checks to make tests pass. Mitchell fixed the underlying modules so they work in all build configurations. Our approach lost test coverage. His preserved it. Always ask "why does this fail?" before asking "how do I skip it?"
 
+**When a test segfaults on one platform only, check the data first.**
+Cross-platform test failures are often caused by platform-specific data (file paths, environment variables), not by broken code. On Windows, file paths contain backslashes and drive letter colons that can break parsers expecting Unix-style paths. Before debugging the logic, ask "what does the input look like on this platform?"
+
+**Keep a mental map of open PRs and what they fix.**
+When investigating a test failure, check if any open PR already addresses the root cause. Recognizing that a segfault in config.Config.test.clone was the same CommaSplitter backslash issue from an open PR saved hours of debugging. Cherry-pick and verify before duplicating work.
+
 ## Where I learned this
 
 - [01-test-lib-vt-fix](../case-studies/01-test-lib-vt-fix.md) -- root cause vs gating, SkipZigTest
 - [02-c-api-crash-fix](../case-studies/02-c-api-crash-fix.md) -- grep wider
 - [03-ghostty-free](../case-studies/03-ghostty-free.md) -- always test C API functions
+- [07-config-clone-segfault](../case-studies/07-config-clone-segfault.md) -- platform-specific data, connecting to open PRs

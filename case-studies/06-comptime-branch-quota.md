@@ -37,9 +37,50 @@ On MSVC: 34 fields x 2173 decls x ~20 chars = ~1.5M branches. Over the 1M quota.
 
 The MSVC translate-c output is ~3x larger because `<sys/types.h>` pulls in Windows SDK headers (BaseTsd.h, etc.), adding ~670 extra declarations.
 
-## The fix
+## The fix (first attempt)
 
 One line: change `@setEvalBranchQuota(1000000)` to `@setEvalBranchQuota(10_000_000)` in src/lib/enum.zig.
+
+This worked but was treating the symptom. The real problem was the O(N x M) algorithm.
+
+## The fix (final -- refactor to @hasDecl)
+
+We realized we already know the exact declaration name for each enum field: it is `prefix ++ UPPER(field.name)`. Instead of searching all 2173 declarations with a nested `inline for`, we use `@hasDecl` for a direct O(1) lookup.
+
+Before (O(N x M)):
+```zig
+@setEvalBranchQuota(10_000_000);
+inline for (enum_fields) |field| {
+    const upper_name = comptime upperString(field.name);
+    inline for (c_decls) |decl| {       // 2173 decls on MSVC
+        if (startsWith(decl.name, prefix) and eql(suffix, upper_name)) {
+            // check value, remove from set
+        }
+    }
+}
+```
+
+After (O(N)):
+```zig
+@setEvalBranchQuota(100_000);
+inline for (enum_fields) |field| {
+    const expected_name: *const [prefix.len + field.name.len]u8 = comptime e: {
+        var buf: [prefix.len + field.name.len]u8 = undefined;
+        @memcpy(buf[0..prefix.len], prefix);
+        for (buf[prefix.len..], field.name) |*d, s| {
+            d.* = std.ascii.toUpper(s);
+        }
+        break :e &buf;
+    };
+    if (@hasDecl(c, expected_name)) {
+        // check value, remove from set
+    }
+}
+```
+
+The quota dropped from 10M to 100K. Works identically on all platforms. Tested on Windows, Linux, and Mac -- no regressions.
+
+Submitted as PR 11813 on ghostty-org/ghostty. Merged same day.
 
 ## What I learned
 
@@ -47,7 +88,9 @@ The scariest part was that the branch quota exhaustion did not produce a compile
 
 This happens because the `inline for` with `comptime` conditions decides at compile time whether to emit each loop body. When the quota runs out mid-iteration, the remaining iterations produce no code. There is no error -- the compiler just stops evaluating comptime branches.
 
-The takeaway: if a comptime-dependent test produces impossible runtime results (the data exists but the code cannot see it), check the branch quota first. And when targeting MSVC, always assume translate-c modules will be larger than on other platforms.
+The bigger lesson came from the refactor: bumping a quota is treating a symptom. The real fix was changing the algorithm. `@hasDecl` does a direct lookup -- no iteration needed. This is a general pattern: when you know what you are looking for, do not iterate over everything to find it. Use the language's built-in lookup mechanisms instead.
+
+Comptime string construction in Zig has some gotchas. `std.ascii.upperString` returns a slice, but you cannot concatenate slices with `++` at comptime -- that operator works on arrays. You need to build the string in a fixed-size buffer using `@memcpy` and a byte-by-byte `for` loop with `std.ascii.toUpper`. The result must be returned as a pointer to the array (`*const [N]u8`) which coerces to `[]const u8` where needed.
 
 The POC test approach -- isolating each step of a complex function into its own test -- was the key debugging technique. Without it, we could have spent hours staring at the translate-c output wondering why perfectly good constants were invisible.
 
