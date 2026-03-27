@@ -132,3 +132,7 @@ PR 23 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [code-
 **DX11 code review fixes** -- Draft (part of PR 23)
 Self-review applying Mitchell's patterns: expanded DirectX11.zig to mirror Metal.zig module structure, added QueryInterface inline wrapper to ID3D11Device for consistency, added HLSL shader README with fxc recompilation instructions.
 PR 23 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [code-style](patterns/code-style.md)
+
+**DLL CRT init review fixes** -- In progress
+Mitchell's review of PR 11856: use `b.allocator` instead of `b.graph.arena` (public API over internals), move C test from `windows/Ghostty.Tests/` to `test/windows/` (follow project directory conventions, not .NET conventions).
+PR 11856 on ghostty-org/ghostty. Related: [code-style](patterns/code-style.md), [testing](patterns/testing.md)

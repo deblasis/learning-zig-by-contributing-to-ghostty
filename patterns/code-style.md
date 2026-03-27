@@ -21,7 +21,11 @@ If the codebase has an established pattern for how modules are organized (Metal.
 **Provide inline wrappers consistently -- all or nothing.**
 If some COM interfaces have inline wrappers for their methods and others use raw vtable calls, the inconsistency suggests some were forgotten. Wrap every method you use. This is especially important in a codebase where the reviewer expects uniformity.
 
+**Use `b.allocator`, not `b.graph.arena`.**
+In Zig's build system, `b.allocator` is the public API for getting an allocator from `std.Build`. `b.graph.arena` is the internal field it wraps. Using internal fields is brittle -- the implementation can change across Zig versions. Same principle as preferring an interface over a concrete type in any language.
+
 ## Where I learned this
 
 - [05-windows-port-ghostling](../case-studies/05-windows-port-ghostling.md) -- Mitchell's review of the ghostling Windows port
 - [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) -- module structure and COM wrapper consistency
+- [12-dll-crt-review](../case-studies/12-dll-crt-review.md) -- b.allocator vs b.graph.arena

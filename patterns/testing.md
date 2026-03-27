@@ -30,6 +30,9 @@ Your local git config, env vars, or OS settings can mask bugs that CI exposes. T
 **Keep a mental map of open PRs and what they fix.**
 When investigating a test failure, check if any open PR already addresses the root cause. Recognizing that a segfault in config.Config.test.clone was the same CommaSplitter backslash issue from an open PR saved hours of debugging. Cherry-pick and verify before duplicating work.
 
+**Follow the project's directory structure, not your language's conventions.**
+A C test file does not belong in `windows/Ghostty.Tests/` just because that is where .NET tests go. Ghostty has `test/` for test infrastructure. When placing a new test file, look at where existing tests live in the project, not where your IDE or language ecosystem would put them.
+
 ## Where I learned this
 
 - [01-test-lib-vt-fix](../case-studies/01-test-lib-vt-fix.md) -- root cause vs gating, SkipZigTest
@@ -37,3 +40,4 @@ When investigating a test failure, check if any open PR already addresses the ro
 - [03-ghostty-free](../case-studies/03-ghostty-free.md) -- always test C API functions
 - [07-config-clone-segfault](../case-studies/07-config-clone-segfault.md) -- platform-specific data, connecting to open PRs
 - [10-crlf-ci-failure](../case-studies/10-crlf-ci-failure.md) -- "works on my machine" with git autocrlf, @embedFile CRLF handling
+- [12-dll-crt-review](../case-studies/12-dll-crt-review.md) -- test file placement follows project structure

@@ -61,7 +61,7 @@ if (deps.config.target.result.os.tag == .windows and
     lib.linkSystemLibrary("libvcruntime");
 
     const arch = deps.config.target.result.cpu.arch;
-    const sdk = std.zig.WindowsSdk.find(b.graph.arena, arch) catch null;
+    const sdk = std.zig.WindowsSdk.find(b.allocator, arch) catch null;
     if (sdk) |s| {
         if (s.windows10sdk) |w10| {
             const arch_str: []const u8 = switch (arch) {
@@ -71,7 +71,7 @@ if (deps.config.target.result.os.tag == .windows and
                 else => "x64",
             };
             const ucrt_lib_path = std.fmt.allocPrint(
-                b.graph.arena,
+                b.allocator,
                 "{s}\\Lib\\{s}\\ucrt\\{s}",
                 .{ w10.path, w10.version, arch_str },
             ) catch null;
