@@ -1,4 +1,4 @@
-Last verified: 2026-03-24
+Last verified: 2026-03-25
 
 # Platform Abstraction
 
@@ -29,7 +29,11 @@ const escape_outside_quotes = builtin.os.tag != .windows;
 **Fix the root cause before gating with platform checks.**
 When tests fail on a platform, the first question should be "can I make this work?" not "can I skip it?". Gating with `if (comptime ...)` hides the problem and loses test coverage. Only skip when the test genuinely cannot run on that platform.
 
+**Test on all platforms when adding enum or union variants.**
+Zig exhaustive switches only error on the platform that compiles that code path. A new tagged union variant can pass on Windows and Linux but break on Mac (or vice versa) because each platform compiles different code -- Metal on Mac, OpenGL on Linux, DirectX on Windows. Always cross-platform test before PRing.
+
 ## Where I learned this
 
 - [01-test-lib-vt-fix](../case-studies/01-test-lib-vt-fix.md) -- struct dispatch and root cause vs gating
 - [04-config-path-parsing](../case-studies/04-config-path-parsing.md) -- comptime constants
+- [08-windows-platform-enum](../case-studies/08-windows-platform-enum.md) -- exhaustive switch broke on Mac only

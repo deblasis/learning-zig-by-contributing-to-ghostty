@@ -1,4 +1,4 @@
-Last verified: 2026-03-25
+Last verified: 2026-03-26
 
 # Testing
 
@@ -24,6 +24,9 @@ We gated failing imports behind artifact checks to make tests pass. Mitchell fix
 **When a test segfaults on one platform only, check the data first.**
 Cross-platform test failures are often caused by platform-specific data (file paths, environment variables), not by broken code. On Windows, file paths contain backslashes and drive letter colons that can break parsers expecting Unix-style paths. Before debugging the logic, ask "what does the input look like on this platform?"
 
+**"Works on my machine" applies even when testing on the target platform.**
+Your local git config, env vars, or OS settings can mask bugs that CI exposes. The CRLF bug passed locally (autocrlf=input) but failed on CI (autocrlf=true). The fix is to make the repo self-describing (e.g. `.gitattributes * text=auto eol=lf`) so no machine's config matters. When `@embedFile` is used with line splitting at comptime, always trim `'\r'` -- the embedded file's line endings depend on git config at checkout time.
+
 **Keep a mental map of open PRs and what they fix.**
 When investigating a test failure, check if any open PR already addresses the root cause. Recognizing that a segfault in config.Config.test.clone was the same CommaSplitter backslash issue from an open PR saved hours of debugging. Cherry-pick and verify before duplicating work.
 
@@ -33,3 +36,4 @@ When investigating a test failure, check if any open PR already addresses the ro
 - [02-c-api-crash-fix](../case-studies/02-c-api-crash-fix.md) -- grep wider
 - [03-ghostty-free](../case-studies/03-ghostty-free.md) -- always test C API functions
 - [07-config-clone-segfault](../case-studies/07-config-clone-segfault.md) -- platform-specific data, connecting to open PRs
+- [10-crlf-ci-failure](../case-studies/10-crlf-ci-failure.md) -- "works on my machine" with git autocrlf, @embedFile CRLF handling

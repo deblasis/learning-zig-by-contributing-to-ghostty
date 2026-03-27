@@ -85,6 +85,50 @@ Reinstalled Visual Studio for C#/WinUI 3 development tooling.
 **FPS counter feature branch** -- Complete
 Simple pluggable stats overlay (FPS counter and potentially other metrics) for early development without needing the full inspector. Designed to be pulled in ad-hoc via a feature branch and replaceable once inspector support lands.
 
-**CI full test suite for Windows** -- Draft
-Added `test-windows` job to CI running `zig build -Dapp-runtime=none test` on windows-2025. Added to required checks. Ready to upstream once PR 11782 merges.
-PR 16 on deblasis/ghostty. Related: [testing](patterns/testing.md)
+**libghostty shared lib install fix for Windows** -- Draft
+Install as ghostty.dll + ghostty-static.lib on Windows instead of libghostty.so + libghostty.a. Guard ubsan_rt bundling in GhosttyLib.zig for MSVC.
+PR 17 on deblasis/ghostty. Related: [platform abstraction](patterns/platform-abstraction.md)
+
+**Windows platform in embedded runtime** -- Draft
+Added GHOSTTY_PLATFORM_WINDOWS to C API, Zig PlatformTag, and Platform union. Cross-platform testing caught a missing exhaustive switch arm in Metal.zig on Mac.
+PR 18 on deblasis/ghostty. Related: [platform abstraction](patterns/platform-abstraction.md)
+
+**CI full test suite for Windows** -- Open
+Added `test-windows` job to CI running `zig build -Dapp-runtime=none test` on windows-2025. Added to required checks. First run exposed a CRLF comptime parsing bug -- fixed with code trim and .gitattributes normalization.
+PR 11839 on ghostty-org/ghostty. Related: [testing](patterns/testing.md)
+
+## 2026-03-26
+
+**CRLF comptime parsing fix** -- Open (part of PR 11839)
+actions/checkout on Windows CI converts LF to CRLF. The octants.txt comptime parser split by '\n' but the trailing '\r' became a struct field lookup, crashing the build. Fixed by trimming '\r' (same pattern as x11_color.zig) and adding `* text=auto eol=lf` to .gitattributes so the repo enforces LF everywhere. Scanned for other vulnerable @embedFile patterns -- only octants.txt needed fixing.
+PR 11839 on ghostty-org/ghostty. Related: [testing](patterns/testing.md), [cmake](patterns/cmake.md)
+
+**WinUI 3 C# project scaffold** -- Draft
+Added windows/Ghostty/ with WinUI 3 project, XAML navigation, DPI awareness, publish profiles for x86/x64/ARM64. Mirrors the macOS/Swift project structure.
+PR 19 on deblasis/ghostty.
+
+**DLL CRT linking fix** -- Draft
+Fixed ghostty.dll build on Windows MSVC by linking `libvcruntime` + `libucrt` (static CRT bootstrap libs) and detecting the UCRT path via `std.zig.WindowsSdk.find()`. This is a workaround for a Zig bug where `linkLibC()` does not set up the full CRT chain for DLL targets. Related Zig issues: 5748, 5842 (closed), PR 5870 (closed, not merged). Plan to file an issue and potentially a fix on Codeberg (Zig's new tracker) once I can do it confidently by hand.
+PR 20 on deblasis/ghostty. Related: [cmake](patterns/cmake.md)
+
+**P/Invoke bindings for libghostty** -- Draft
+C# interop layer: GhosttyTypes.cs (struct/enum mappings), NativeMethods.cs (LibraryImport P/Invoke), GhosttyApp.cs (managed wrapper for init-config-app lifecycle). Uses source-generated P/Invoke with DisableRuntimeMarshalling. Stub callbacks for wakeup, action, clipboard, close_surface. Post-build step copies ghostty.dll to output.
+PR 20 on deblasis/ghostty. Related: [cmake](patterns/cmake.md)
+
+**DllMain CRT init workaround** -- Draft
+Zig's _DllMainCRTStartup does not initialize MSVC C runtime for DLL targets. Declared DllMain in main_c.zig that calls __vcrt_initialize/__acrt_initialize on DLL_PROCESS_ATTACH via @extern. Comptime-guarded to Windows MSVC. This is the runtime counterpart to the linking fix in PR 20.
+PR 21 on deblasis/ghostty. Related: [cmake](patterns/cmake.md), [platform abstraction](patterns/platform-abstraction.md)
+
+**SwapChainPanel spike** -- Complete
+C# WinUI 3 app with SwapChainPanel rendering DX11 scenes via libghostty.dll. Proved the architecture works: C# GUI wrapping Zig/DX11 rendering, matching macOS Swift + Metal. Animated demo scenes, bitmap font splash, resize support. Found IDXGIFactory2 vtable bug (missing CreateSoftwareAdapter slot).
+PR 22 on deblasis/ghostty.
+
+**DX11 renderer infrastructure** -- Draft
+Extracted clean DX11 infrastructure from spike: COM bindings (com.zig, dxgi.zig, d3d11.zig), device lifecycle, instanced cell grid pipeline, pre-compiled HLSL shaders. DirectX11.zig expanded to mirror Metal.zig module pattern. Backend enum with directx11 variant, d3d11/dxgi system library linking. Tests verify struct sizes, GUID constants, vtable pointer layout. Cross-platform: 2604 Windows, 2655 Linux, 2655 Mac tests passing.
+PR 23 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [code-style](patterns/code-style.md), [testing](patterns/testing.md)
+
+## 2026-03-27
+
+**DX11 code review fixes** -- Draft (part of PR 23)
+Self-review applying Mitchell's patterns: expanded DirectX11.zig to mirror Metal.zig module structure, added QueryInterface inline wrapper to ID3D11Device for consistency, added HLSL shader README with fxc recompilation instructions.
+PR 23 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [code-style](patterns/code-style.md)

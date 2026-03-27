@@ -52,9 +52,10 @@ Patterns index:
 - platform-abstraction.md -- comptime dispatch, struct patterns, platform gating
 - testing.md -- test coverage, C API testing, SkipZigTest, root cause vs symptom, platform-specific data, connecting failures to open PRs
 - api-design.md -- alloc/free pairs, module naming, header docs, switch arm patterns
-- cmake.md -- Windows DLL/implib, Ninja, FetchContent, build pipeline stages
+- cmake.md -- Windows DLL/implib, Ninja, FetchContent, build pipeline stages, MSVC CRT linking, UCRT path detection
 - code-style.md -- abstraction level, demo code simplicity, fork-first testing
 - comptime.md -- branch quota limits, MSVC translate-c size, @hasDecl vs iteration, comptime string construction, debugging with POC tests
+- com-vtable.md -- COM vtable layout in Zig, Reserved slots, errdefer cleanup, @extern DLL imports, struct size verification
 
 For concrete examples, check the case-studies/ directory.
 
