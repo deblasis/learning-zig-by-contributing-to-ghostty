@@ -1,4 +1,4 @@
-Last verified: 2026-03-27
+Last verified: 2026-03-28
 
 # COM Vtable Bindings in Zig
 
@@ -33,6 +33,13 @@ Extern structs that cross the COM boundary (DXGI_SWAP_CHAIN_DESC1, D3D11_BUFFER_
 **Use `callconv(.winapi)` for all COM function pointers.**
 COM uses `__stdcall` on 32-bit and the default calling convention on 64-bit. Zig's `.winapi` handles both cases. Never use `.c` for COM.
 
+**Use explicit `@as` for COM optional pointer coercion.**
+When passing a `*T` where `?*T` is expected (common in COM method wrappers that take optional arrays), use `@as(?*T, value)` to make the coercion visible. Implicit coercion works but hides the intent, and reviewers cannot tell if the optionality was considered.
+
+**Avoid case-insensitive filename collisions in module naming.**
+Windows filesystems are case-insensitive. If a directory has a generic contract type `Pipeline.zig` and a concrete implementation `pipeline.zig`, they collide. Name the concrete type after its purpose, like `cell_pipeline.zig`, so the names are distinct on any filesystem.
+
 ## Where I learned this
 
-- [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) -- building DX11/DXGI bindings from scratch
+- [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) - building DX11/DXGI bindings from scratch
+- [13-dx11-review-cleanup](../case-studies/13-dx11-review-cleanup.md) - @as coercion, filename collisions, build artifacts
