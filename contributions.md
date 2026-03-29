@@ -145,6 +145,10 @@ PR 31 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [code-
 
 ## 2026-03-29
 
-**HLSL shaders + pipeline loading** - Draft
+**HLSL shaders + pipeline loading** - Merged
 Wrote HLSL shaders for all 5 DX11 pipelines, wired build-time compilation via fxc, loaded pipelines from embedded bytecode with input layouts and real vertex buffer strides. Simplified color logic, full color science deferred. Key learning: HLSL cbuffer packing is not C struct packing, must use packoffset.
 PR 66 on deblasis/ghostty. Related: [dx11-shaders](patterns/dx11-shaders.md), [com-vtable](patterns/com-vtable.md)
+
+**DX11 render loop wiring** - Merged
+Wired the render loop end-to-end: Target holds a real RTV borrowed from Device, RenderPass.begin() binds it from attachments, Frame becomes a thin passthrough. Self-review caught a for+break anti-pattern (should be direct indexing), redundant union re-access (use switch captures), and silent skips (add log.warn).
+PR 67 on deblasis/ghostty. Related: [code-style](patterns/code-style.md), [com-vtable](patterns/com-vtable.md)

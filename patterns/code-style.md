@@ -1,4 +1,4 @@
-Last verified: 2026-03-27
+Last verified: 2026-03-29
 
 # Code Style
 
@@ -24,8 +24,18 @@ If some COM interfaces have inline wrappers for their methods and others use raw
 **Use `b.allocator`, not `b.graph.arena`.**
 In Zig's build system, `b.allocator` is the public API for getting an allocator from `std.Build`. `b.graph.arena` is the internal field it wraps. Using internal fields is brittle -- the implementation can change across Zig versions. Same principle as preferring an interface over a concrete type in any language.
 
+**Don't use `for` + `break` when you mean "process the first element".**
+A for loop implies iteration. If you always break after one iteration, use direct indexing (`arr[0]`) with a length check. The loop form is especially misleading when it has `continue` branches that silently skip remaining elements.
+
+**Use switch captures instead of re-accessing union fields.**
+If a switch arm captures a value (`|t|`), use the captured binding. Re-accessing `union.field` after the switch is redundant and fragile. Zig's multi-value return from switch arms (`const a, const b = switch ...`) lets you extract multiple values cleanly.
+
+**Log warnings for unsupported paths, don't silently skip.**
+When hitting a code path that can't do useful work yet (like an unimplemented texture attachment), emit a log.warn. Silent skips make bugs invisible. The warning also serves as documentation that the path exists but is not wired yet.
+
 ## Where I learned this
 
 - [05-windows-port-ghostling](../case-studies/05-windows-port-ghostling.md) -- Mitchell's review of the ghostling Windows port
 - [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) -- module structure and COM wrapper consistency
 - [12-dll-crt-review](../case-studies/12-dll-crt-review.md) -- b.allocator vs b.graph.arena
+- [15-dx11-render-loop-wiring](../case-studies/15-dx11-render-loop-wiring.md) -- for+break anti-pattern, switch captures, silent skips
