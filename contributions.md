@@ -142,3 +142,9 @@ PR 11856 on ghostty-org/ghostty. Related: [code-style](patterns/code-style.md), 
 **DX11 review cleanup** - Draft
 Renamed pipeline.zig to cell_pipeline.zig (case-insensitive collision), removed .cso binaries from git, added explicit @as for COM pointer coercion, cleaned emdashes and method count comments.
 PR 31 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [code-style](patterns/code-style.md)
+
+## 2026-03-29
+
+**HLSL shaders + pipeline loading** - Draft
+Wrote HLSL shaders for all 5 DX11 pipelines, wired build-time compilation via fxc, loaded pipelines from embedded bytecode with input layouts and real vertex buffer strides. Simplified color logic, full color science deferred. Key learning: HLSL cbuffer packing is not C struct packing, must use packoffset.
+PR 66 on deblasis/ghostty. Related: [dx11-shaders](patterns/dx11-shaders.md), [com-vtable](patterns/com-vtable.md)

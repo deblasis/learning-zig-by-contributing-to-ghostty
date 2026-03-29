@@ -56,6 +56,7 @@ Patterns index:
 - code-style.md -- abstraction level, demo code simplicity, fork-first testing
 - comptime.md -- branch quota limits, MSVC translate-c size, @hasDecl vs iteration, comptime string construction, debugging with POC tests
 - com-vtable.md -- COM vtable layout in Zig, Reserved slots, errdefer cleanup, @extern DLL imports, struct size verification
+- dx11-shaders.md -- HLSL cbuffer packoffset, Load vs Sample, input layout validation, build-time shader compilation
 
 For concrete examples, check the case-studies/ directory.
 
