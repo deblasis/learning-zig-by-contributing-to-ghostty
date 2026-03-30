@@ -152,3 +152,17 @@ PR 66 on deblasis/ghostty. Related: [dx11-shaders](patterns/dx11-shaders.md), [c
 **DX11 render loop wiring** - Merged
 Wired the render loop end-to-end: Target holds a real RTV borrowed from Device, RenderPass.begin() binds it from attachments, Frame becomes a thin passthrough. Self-review caught a for+break anti-pattern (should be direct indexing), redundant union re-access (use switch captures), and silent skips (add log.warn).
 PR 67 on deblasis/ghostty. Related: [code-style](patterns/code-style.md), [com-vtable](patterns/com-vtable.md)
+
+## 2026-03-30
+
+**GHOSTTY_EXPORT for shared library symbol visibility** - Merged
+Added GHOSTTY_EXPORT annotation macro to all public function declarations in ghostty.h and the vt headers. On Windows this resolves to __declspec(dllexport/dllimport), on Linux/Mac to __attribute__((visibility("default"))). No-op for static builds. Follows the same pattern as SDL (SDL_DECLSPEC), cURL (CURL_EXTERN), SQLite (SQLITE_API), and FreeType (FT_EXPORT).
+PR 84 on deblasis/ghostty. Related: [platform abstraction](patterns/platform-abstraction.md)
+
+**DX11 padding background color fix** - Merged
+Fixed padding area showing dark gaps by adding premultiplied-alpha blend state (SRC=ONE, DST=INV_SRC_ALPHA) and shader-side compositing in CellBgPS. Edge cells clamped into padding instead of returning transparent. Alpha forced to 1.0 to prevent DWM showing desktop through padding pixels.
+PR 75 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [dx11-shaders](patterns/dx11-shaders.md)
+
+**DX11 smooth window resize** - Merged
+Eliminated visible stretching during resize with DXGI_SCALING_NONE for HWND swap chains (composition surfaces keep STRETCH). Added resize timer in Win32 example to keep rendering during the modal resize loop. Wired up GetDesc/GetDesc1 COM methods and added regression tests for blend state config and swap chain scaling. Discovered stale base branch issue where just sync missed squash-merged PRs, causing PR 75 regression.
+PR 76 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [testing](patterns/testing.md)

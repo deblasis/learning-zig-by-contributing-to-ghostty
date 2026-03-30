@@ -1,4 +1,4 @@
-Last verified: 2026-03-26
+Last verified: 2026-03-30
 
 # Testing
 
@@ -30,6 +30,12 @@ Your local git config, env vars, or OS settings can mask bugs that CI exposes. T
 **Keep a mental map of open PRs and what they fix.**
 When investigating a test failure, check if any open PR already addresses the root cause. Recognizing that a segfault in config.Config.test.clone was the same CommaSplitter backslash issue from an open PR saved hours of debugging. Cherry-pick and verify before duplicating work.
 
+**Write regression tests that verify GPU object config, not just creation.**
+Creating a COM object and checking it is non-null proves the API call works, but it does not catch config drift. Use GetDesc/GetDesc1 to read back the actual parameters (blend factors, scaling mode, etc.) and assert them. This is how you catch someone changing DXGI_SCALING from NONE to STRETCH without meaning to.
+
+**Sync workflows must pull the fork remote, not just upstream.**
+If you squash-merge a PR on GitHub and then rebase a feature branch on the local base, the squash-merged changes are missing. The local branch is stale. Always fetch and ff-merge the fork remote before rebasing on upstream. This caused a full regression of PR 75 during PR 76 testing.
+
 **Follow the project's directory structure, not your language's conventions.**
 A C test file does not belong in `windows/Ghostty.Tests/` just because that is where .NET tests go. Ghostty has `test/` for test infrastructure. When placing a new test file, look at where existing tests live in the project, not where your IDE or language ecosystem would put them.
 
@@ -41,3 +47,4 @@ A C test file does not belong in `windows/Ghostty.Tests/` just because that is w
 - [07-config-clone-segfault](../case-studies/07-config-clone-segfault.md) -- platform-specific data, connecting to open PRs
 - [10-crlf-ci-failure](../case-studies/10-crlf-ci-failure.md) -- "works on my machine" with git autocrlf, @embedFile CRLF handling
 - [12-dll-crt-review](../case-studies/12-dll-crt-review.md) -- test file placement follows project structure
+- [16-dx11-regression-tests](../case-studies/16-dx11-regression-tests.md) -- GPU config readback tests, stale base branch regression

@@ -1,4 +1,4 @@
-Last verified: 2026-03-28
+Last verified: 2026-03-30
 
 # COM Vtable Bindings in Zig
 
@@ -36,6 +36,12 @@ COM uses `__stdcall` on 32-bit and the default calling convention on 64-bit. Zig
 **Use explicit `@as` for COM optional pointer coercion.**
 When passing a `*T` where `?*T` is expected (common in COM method wrappers that take optional arrays), use `@as(?*T, value)` to make the coercion visible. Implicit coercion works but hides the intent, and reviewers cannot tell if the optionality was considered.
 
+**Wire up GetDesc methods for regression testing.**
+COM objects store their creation parameters internally. Calling GetDesc/GetDesc1 reads them back, which lets you verify the config in tests. This is how you guard against someone changing blend factors or swap chain scaling. Note: some GetDesc methods return void (ID3D11BlendState), others return HRESULT (IDXGISwapChain1). Check the SDK header for each one.
+
+**You can declare Win32 extern functions locally in test scope.**
+If a Win32 API (RegisterClassExW, CreateWindowExW, etc.) is only needed in tests, declare the extern and struct types inside a `const user32 = struct { ... }` in the test function. No need to add them to the main bindings. Hidden windows (never shown) are valid HWND targets for swap chain creation.
+
 **Avoid case-insensitive filename collisions in module naming.**
 Windows filesystems are case-insensitive. If a directory has a generic contract type `Pipeline.zig` and a concrete implementation `pipeline.zig`, they collide. Name the concrete type after its purpose, like `cell_pipeline.zig`, so the names are distinct on any filesystem.
 
@@ -43,3 +49,4 @@ Windows filesystems are case-insensitive. If a directory has a generic contract 
 
 - [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) - building DX11/DXGI bindings from scratch
 - [13-dx11-review-cleanup](../case-studies/13-dx11-review-cleanup.md) - @as coercion, filename collisions, build artifacts
+- [16-dx11-regression-tests](../case-studies/16-dx11-regression-tests.md) - GetDesc wiring, hidden HWND for testing, regression guards
