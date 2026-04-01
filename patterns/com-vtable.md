@@ -1,4 +1,4 @@
-Last verified: 2026-03-30
+Last verified: 2026-04-01
 
 # COM Vtable Bindings in Zig
 
@@ -42,6 +42,9 @@ COM objects store their creation parameters internally. Calling GetDesc/GetDesc1
 **You can declare Win32 extern functions locally in test scope.**
 If a Win32 API (RegisterClassExW, CreateWindowExW, etc.) is only needed in tests, declare the extern and struct types inside a `const user32 = struct { ... }` in the test function. No need to add them to the main bindings. Hidden windows (never shown) are valid HWND targets for swap chain creation.
 
+**DirectComposition interfaces follow the same vtable pattern as D3D11/DXGI.**
+dcomp.dll exposes IDCompositionDevice, IDCompositionTarget, and IDCompositionVisual. They inherit IUnknown and use the same flat vtable layout. IDCompositionVisual has overloaded methods (SetOffsetX float vs animation) that each occupy their own slot - count carefully. SetContent is at slot 15, not where you'd guess from the method list.
+
 **Avoid case-insensitive filename collisions in module naming.**
 Windows filesystems are case-insensitive. If a directory has a generic contract type `Pipeline.zig` and a concrete implementation `pipeline.zig`, they collide. Name the concrete type after its purpose, like `cell_pipeline.zig`, so the names are distinct on any filesystem.
 
@@ -50,3 +53,4 @@ Windows filesystems are case-insensitive. If a directory has a generic contract 
 - [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) - building DX11/DXGI bindings from scratch
 - [13-dx11-review-cleanup](../case-studies/13-dx11-review-cleanup.md) - @as coercion, filename collisions, build artifacts
 - [16-dx11-regression-tests](../case-studies/16-dx11-regression-tests.md) - GetDesc wiring, hidden HWND for testing, regression guards
+- [17-directcomposition-hwnd](../case-studies/17-directcomposition-hwnd.md) - DirectComposition bindings, overloaded method slots, composition vs swap chain

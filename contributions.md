@@ -166,3 +166,23 @@ PR 75 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [dx11-
 **DX11 smooth window resize** - Merged
 Eliminated visible stretching during resize with DXGI_SCALING_NONE for HWND swap chains (composition surfaces keep STRETCH). Added resize timer in Win32 example to keep rendering during the modal resize loop. Wired up GetDesc/GetDesc1 COM methods and added regression tests for blend state config and swap chain scaling. Discovered stale base branch issue where just sync missed squash-merged PRs, causing PR 75 regression.
 PR 76 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [testing](patterns/testing.md)
+
+## 2026-03-31
+
+**Composition swap chain path through C API** - Merged
+Added swap_chain_panel field to ghostty_platform_windows_s so embedders can pass an ISwapChainPanelNative pointer for composition surfaces. Threaded it through apprt/embedded.zig to the DX11 renderer. Unblocked the WinUI 3 example in libghostty-dotnet.
+PR 86 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [platform-abstraction](patterns/platform-abstraction.md)
+
+**Shared DXGI texture surface mode** - Merged
+Added a third DX11 surface mode where ghostty renders to a standalone D3D11 texture and exposes a DXGI shared handle. Consumers open the handle on their own device and sample the texture directly. Target owns the texture and RTV in this mode. Legacy GetSharedHandle for now, NT handle path deferred.
+PR 92 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [dx11-surfaces](patterns/dx11-surfaces.md)
+
+## 2026-04-01
+
+**DirectComposition for HWND surfaces** - Draft
+Replaced CreateSwapChainForHwnd with DirectComposition + CreateSwapChainForComposition for the HWND path. Adds dcomp.zig with IDCompositionDevice, IDCompositionTarget, IDCompositionVisual bindings. HWND consumers now get per-pixel transparency and independent flip. Key learning: swap chains are buffer infrastructure, composition is how buffers reach the screen via DWM. These are independent concepts.
+PR 97 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [dx11-surfaces](patterns/dx11-surfaces.md)
+
+**libghostty-dotnet shared texture example** - Merged
+Added shared DXGI texture surface mode support and example to the .NET interop repo. Demonstrates rendering to a texture that the host application samples on its own device. Sixth example after Win32, WinForms, WPF-Simple, WPF-Direct, and WinUI 3.
+PR 5 on deblasis/libghostty-dotnet. Related: [dx11-surfaces](patterns/dx11-surfaces.md)
