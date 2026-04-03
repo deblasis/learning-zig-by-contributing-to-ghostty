@@ -186,3 +186,9 @@ PR 97 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md), [dx11-
 **libghostty-dotnet shared texture example** - Merged
 Added shared DXGI texture surface mode support and example to the .NET interop repo. Demonstrates rendering to a texture that the host application samples on its own device. Sixth example after Win32, WinForms, WPF-Simple, WPF-Direct, and WinUI 3.
 PR 5 on deblasis/libghostty-dotnet. Related: [dx11-surfaces](patterns/dx11-surfaces.md)
+
+## 2026-04-02
+
+**DX12 pivot** - Draft (15 PRs)
+Pivoted the renderer from DX11 to DX12-only after upstream feedback. DX11 is frozen at Microsoft (Windows 10 EOL). Clean break, no fallback. Reusable pieces (DXGI, HLSL, COM, DirectComposition) carried forward. 15 stacked PRs covering directory rename, D3D12 COM bindings, device lifecycle, descriptor heaps, frame management, render pass, clear-to-color, buffers, textures, samplers, pipeline, shader loading, all 5 render pipelines wired, and GPU integration tests.
+PRs 107-110 and 113-124 on deblasis/ghostty. Related: [api-lifecycle](patterns/api-lifecycle.md), [com-vtable](patterns/com-vtable.md)

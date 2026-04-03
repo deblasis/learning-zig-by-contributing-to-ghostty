@@ -58,6 +58,7 @@ Patterns index:
 - com-vtable.md -- COM vtable layout in Zig, Reserved slots, errdefer cleanup, @extern DLL imports, struct size verification
 - dx11-shaders.md -- HLSL cbuffer packoffset, Load vs Sample, input layout validation, build-time shader compilation
 - dx11-surfaces.md -- swap chain vs composition, DirectComposition, shared textures, premultiplied alpha
+- api-lifecycle.md -- check vendor API lifecycle before building, separate reusable infra from API-specific code
 
 For concrete examples, check the case-studies/ directory.
 
