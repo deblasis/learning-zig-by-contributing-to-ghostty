@@ -1,8 +1,8 @@
-Last verified: 2026-04-01
+Last verified: 2026-04-05
 
 # COM Vtable Bindings in Zig
 
-How to write correct COM interface bindings in Zig for DirectX 11 and DXGI.
+How to write correct COM interface bindings in Zig for DirectX and DXGI.
 
 ## Patterns
 
@@ -48,9 +48,19 @@ dcomp.dll exposes IDCompositionDevice, IDCompositionTarget, and IDCompositionVis
 **Avoid case-insensitive filename collisions in module naming.**
 Windows filesystems are case-insensitive. If a directory has a generic contract type `Pipeline.zig` and a concrete implementation `pipeline.zig`, they collide. Name the concrete type after its purpose, like `cell_pipeline.zig`, so the names are distinct on any filesystem.
 
+**COM methods returning structs use a hidden output pointer, not register returns.**
+In the COM binary ABI, methods that return a struct by value actually take a hidden pointer as the first parameter (after `self`) and write the result there. Zig's default calling convention treats them as register returns, which gives garbage. For example, `GetCPUDescriptorHandleForHeapStart` returns a `D3D12_CPU_DESCRIPTOR_HANDLE` (8 bytes). The vtable slot must be declared as `fn(self, *Handle) callconv(.winapi) *Handle`, not `fn(self) callconv(.winapi) Handle`. The inline wrapper hides this by taking the pointer internally and returning the value.
+
+**Small structs passed by value in COM vtables may need to be declared as raw scalars.**
+The MSVC x64 ABI passes structs of 1, 2, 4, or 8 bytes in a register as if they were integers. COM vtable slots follow this rule. A `D3D12_CPU_DESCRIPTOR_HANDLE` (just a `usize` wrapper) must be declared as `usize` in the vtable, not as the struct type. The type-safe inline wrapper converts between the scalar and the struct. If you use the struct type directly, the calling convention may pass it differently and you get wrong values.
+
+**COM union types must include all variants to match MSVC layout, even unused ones.**
+A union's size is determined by its largest member. If you skip a member you don't use, the union may be smaller than what MSVC produces. `D3D12_SHADER_RESOURCE_VIEW_DESC` has a union with `D3D12_BUFFER_SRV` (24 bytes) as its largest member. If you only declare `D3D12_TEX2D_SRV` (16 bytes), the struct is 28 bytes instead of 36. The D3D12 runtime reads 36 bytes and goes past the end, causing DEVICE_REMOVED. Always include enough union variants to match the MSVC size, even if you never fill them.
+
 ## Where I learned this
 
 - [11-dx11-renderer-infrastructure](../case-studies/11-dx11-renderer-infrastructure.md) - building DX11/DXGI bindings from scratch
 - [13-dx11-review-cleanup](../case-studies/13-dx11-review-cleanup.md) - @as coercion, filename collisions, build artifacts
 - [16-dx11-regression-tests](../case-studies/16-dx11-regression-tests.md) - GetDesc wiring, hidden HWND for testing, regression guards
 - [17-directcomposition-hwnd](../case-studies/17-directcomposition-hwnd.md) - DirectComposition bindings, overloaded method slots, composition vs swap chain
+- [19-com-abi-struct-passing](../case-studies/19-com-abi-struct-passing.md) - struct return ABI, struct-by-value parameters, union sizing for D3D12

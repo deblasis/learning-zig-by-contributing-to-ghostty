@@ -192,3 +192,19 @@ PR 5 on deblasis/libghostty-dotnet. Related: [dx11-surfaces](patterns/dx11-surfa
 **DX12 pivot** - Draft (15 PRs)
 Pivoted the renderer from DX11 to DX12-only after upstream feedback. DX11 is frozen at Microsoft (Windows 10 EOL). Clean break, no fallback. Reusable pieces (DXGI, HLSL, COM, DirectComposition) carried forward. 15 stacked PRs covering directory rename, D3D12 COM bindings, device lifecycle, descriptor heaps, frame management, render pass, clear-to-color, buffers, textures, samplers, pipeline, shader loading, all 5 render pipelines wired, and GPU integration tests.
 PRs 107-110 and 113-124 on deblasis/ghostty. Related: [api-lifecycle](patterns/api-lifecycle.md), [com-vtable](patterns/com-vtable.md)
+
+## 2026-04-03
+
+**DX12 COM ABI fix: descriptor heap handle methods** - Merged
+Fixed GetCPUDescriptorHandleForHeapStart and GetGPUDescriptorHandleForHeapStart to use the hidden output pointer convention for struct returns. All three descriptor heaps were returning identical garbage handle values.
+PR 142 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md)
+
+**DX12 COM ABI fix: descriptor handle parameters and SRV desc size** - Merged
+Fixed struct-by-value parameter passing (descriptor handles must be raw scalars in vtable slots). Fixed D3D12_SHADER_RESOURCE_VIEW_DESC union size by adding the missing D3D12_BUFFER_SRV variant (28 bytes vs correct 36 bytes). Both caused DEVICE_REMOVED during texture creation.
+PR 145 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md)
+
+## 2026-04-05
+
+**DX12 init command list and staging buffer lifetime fix** - Open
+Fixed three linked issues preventing glyph rendering: created a one-shot command list for init-time texture barriers, moved beginFrame before atlas sync so DX12 has a valid command list for uploads, deferred staging buffer release to fix use-after-free that caused white squares.
+PR 149 on deblasis/ghostty. Related: [dx12-resource-lifecycle](patterns/dx12-resource-lifecycle.md), [com-vtable](patterns/com-vtable.md)

@@ -55,10 +55,11 @@ Patterns index:
 - cmake.md -- Windows DLL/implib, Ninja, FetchContent, build pipeline stages, MSVC CRT linking, UCRT path detection
 - code-style.md -- abstraction level, demo code simplicity, fork-first testing
 - comptime.md -- branch quota limits, MSVC translate-c size, @hasDecl vs iteration, comptime string construction, debugging with POC tests
-- com-vtable.md -- COM vtable layout in Zig, Reserved slots, errdefer cleanup, @extern DLL imports, struct size verification
+- com-vtable.md -- COM vtable layout in Zig, Reserved slots, errdefer cleanup, @extern DLL imports, struct size verification, struct return ABI, struct-by-value parameters, union sizing
 - dx11-shaders.md -- HLSL cbuffer packoffset, Load vs Sample, input layout validation, build-time shader compilation
 - dx11-surfaces.md -- swap chain vs composition, DirectComposition, shared textures, premultiplied alpha
 - api-lifecycle.md -- check vendor API lifecycle before building, separate reusable infra from API-specific code
+- dx12-resource-lifecycle.md -- staging buffer lifetimes, init command lists, beginFrame ordering, command list staleness, resource state tracking
 
 For concrete examples, check the case-studies/ directory.
 
