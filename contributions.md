@@ -208,3 +208,13 @@ PR 145 on deblasis/ghostty. Related: [com-vtable](patterns/com-vtable.md)
 **DX12 init command list and staging buffer lifetime fix** - Open
 Fixed three linked issues preventing glyph rendering: created a one-shot command list for init-time texture barriers, moved beginFrame before atlas sync so DX12 has a valid command list for uploads, deferred staging buffer release to fix use-after-free that caused white squares.
 PR 149 on deblasis/ghostty. Related: [dx12-resource-lifecycle](patterns/dx12-resource-lifecycle.md), [com-vtable](patterns/com-vtable.md)
+
+## 2026-04-08
+
+**WinUI 3 shell: hoist libghostty config and app to a per-window host** - Merged
+Prerequisite refactor for multi-pane support. Moved GhosttyConfig and GhosttyApp ownership from the per-leaf TerminalControl up to a new GhosttyHost owned by MainWindow. Runtime callbacks (wakeup, action, clipboard, close-surface) now live on GhosttyHost. Action callback dispatches to the right leaf via a dictionary keyed on surface handle, decoded from the action target struct. Per-surface callbacks dispatch via a GCHandle pinned in TerminalControl and echoed back through ghostty_surface_config_s.userdata.
+PR 161 on deblasis/ghostty. Related: [libghostty-embedder](patterns/libghostty-embedder.md), [com-vtable](patterns/com-vtable.md)
+
+**WinUI 3 shell: multi-pane splits** - Draft
+Recursive split panes in the WinUI 3 shell. Bindings match Windows Terminal: Ctrl+Shift+D for vertical, Ctrl+Shift+E for horizontal, Ctrl+Shift+W to close, Alt+Arrows for directional focus. New PaneNode binary tree, PaneTree visitor and mutation helpers, hand-rolled 1px Splitter, PaneHost UserControl that owns the tree and renders it as nested 2-cell Grids. Active-pane highlight via overlay Canvas. Surface lifetime decoupled from Loaded/Unloaded so that visual-tree reparenting does not kill running shells. Incremental rebuilds on split, not full tree rebuilds, to dodge a WinUI 3 detach/reattach quirk that bites at depth 2 and beyond.
+PR 163 on deblasis/ghostty. Related: [libghostty-embedder](patterns/libghostty-embedder.md)

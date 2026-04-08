@@ -60,6 +60,7 @@ Patterns index:
 - dx11-surfaces.md -- swap chain vs composition, DirectComposition, shared textures, premultiplied alpha
 - api-lifecycle.md -- check vendor API lifecycle before building, separate reusable infra from API-specific code
 - dx12-resource-lifecycle.md -- staging buffer lifetimes, init command lists, beginFrame ordering, command list staleness, resource state tracking
+- libghostty-embedder.md -- consuming the libghostty C API from a non-Swift embedder: action target struct dereferencing on Win x64, per-surface userdata routing, surface lifetime decoupled from UI framework reparenting events, hoisting app/config above per-surface controls
 
 For concrete examples, check the case-studies/ directory.
 
